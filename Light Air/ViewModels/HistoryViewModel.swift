@@ -1,0 +1,54 @@
+//
+//  HistoryViewModel.swift
+//  Light Air
+//
+//  Created by Mihai on 11/02/2020.
+//  Copyright © 2020 Mihai Dorhan. All rights reserved.
+//
+
+import Foundation
+
+struct HistoryItemsViewModel {
+    
+    var historyItems = [HistoryItemVM]()
+    init() { }
+    
+    mutating func fetchAllHistoryData() {
+        historyItems = CoreDataManager.shared.getAllPollutionData().map(HistoryItemVM.init)
+    }
+    
+    func deleteAllHistoryData() {
+        CoreDataManager.shared.deleteAllPollutionData()
+    }
+    
+}
+
+struct HistoryItemVM {
+
+    let dateFormatter = DateFormatter()
+    
+    let name: String?
+    let country: String?
+    let state: String?
+    let pollution: Int?
+    var timestamp: String = ""
+    
+    init(cityData: CityData) {
+        self.name = cityData.name
+        self.country = cityData.country
+        self.state = cityData.state
+        self.pollution =  Int(cityData.pollution)
+        
+        if let timestamp = cityData.timestamp {
+            dateFormatter.dateStyle = .short
+            dateFormatter.dateFormat = "dd/MMM"
+            self.timestamp = dateFormatter.string(from: timestamp)
+        } 
+        
+    }
+    
+    var pollutionDetailsData: [String:Any] {
+        PollutionIndex.shared.getAirQualityLevel(pollution)
+    }
+    
+}

@@ -1,0 +1,231 @@
+//
+//  ViewController.swift
+//  Light Air
+//
+//  Created by Mihai on 31/01/2020.
+//  Copyright © 2020 Mihai Dorhan. All rights reserved.
+//
+
+import UIKit
+import MapKit
+import CoreLocation
+
+class HomeViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
+    
+    @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var detailsView: UIView!
+    @IBOutlet weak var airQualityView: UIView!
+    @IBOutlet weak var cityNameLabel: UILabel!
+    @IBOutlet weak var cityTemperatureLabel: UILabel!
+    @IBOutlet weak var cityHumidityLabel: UILabel!
+    @IBOutlet weak var temperatureIcon: UIImageView!
+    @IBOutlet weak var airQualityLabel: UILabel!
+    
+    private let locationManager = CLLocationManager()
+    private var cityVM: CityViewModel = CityViewModel()
+    
+    var selectedCity:City?
+    var isShowingUserLocation:Bool = false
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        if let currentUserLocationPermissionLevel = UserPermissions.shared.currentUserPermissionStatus {
+            UserPermissions.shared.userLocationUsagePreference = currentUserLocationPermissionLevel
+        }
+        
+        locationManager.delegate = self
+        self.mapView.delegate = self
+        
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        ThemeManager.addHeaderImageToNavigationController(sender: self, width: 40, height: 40)
+        
+        getClosestCityData()
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        if let selectedCity = selectedCity {
+           self.cityVM = CityViewModel(city: selectedCity)
+           self.setupUI()
+           self.isShowingUserLocation = false
+        }
+    }
+
+}
+
+
+
+extension HomeViewController {
+
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if(status == CLAuthorizationStatus.authorizedWhenInUse || status == CLAuthorizationStatus.authorizedAlways) {
+            UserPermissions.shared.userLocationUsagePreference = true
+            getClosestCityData()
+        } else if (status == CLAuthorizationStatus.notDetermined) {
+            getClosestCityData()
+        } else {
+            UserPermissions.shared.userLocationUsagePreference = false
+            handleServerError("Location Request Denied", UserPermissions.shared.defaultErrorMessage, "OK")
+        }
+    }
+    
+    private func setupUI() {
+        self.cityNameLabel.text = cityVM.cityName
+        self.cityHumidityLabel.text = cityVM.humidity
+        self.cityTemperatureLabel.text = cityVM.temperature
+        
+        if let pollutionIndex = cityVM.pollutionLevel {
+            
+            guard let airQuality = cityVM.pollutionDetails["quality"] as? String,
+                  let airQualityBg = cityVM.pollutionDetails["color"] as? UIColor,
+                  let airQualityFontColor = cityVM.pollutionDetails["fontColor"] as? UIColor else { return }
+         
+            airQualityView.backgroundColor = airQualityBg
+            airQualityLabel.text = "Air Quality: \(airQuality) // US AQI \(pollutionIndex)"
+            airQualityLabel.textColor = airQualityFontColor
+            airQualityView.alpha = 1
+            
+        }
+        
+        if let iconName = cityVM.iconCode {
+            self.temperatureIcon.image = UIImage(named: iconName)
+        }
+     
+        self.navigationItem.title = cityVM.state
+        self.detailsView.alpha = 1
+        
+        if let coordinates = cityVM.location {
+            self.zoomInToDesiredLocation(location: coordinates)
+        }
+    }
+    
+}
+
+
+extension HomeViewController {
+    
+    private func zoomInToDesiredLocation(location: Array<Double>) {
+       
+        setupCurrentLocationRegion(location: location)
+        mapView.removeAnnotations(mapView.annotations)
+        
+        if let pollutionIndex = cityVM.pollutionLevel {
+            let annotation = PollutionAnnotation(pollution: pollutionIndex)
+            annotation.coordinate = CLLocationCoordinate2D(latitude: location[1], longitude: location[0])
+            if let airQuality = annotation.airQuality["quality"] as? String {
+                annotation.title = airQuality
+            }
+           
+            self.mapView.addAnnotation(annotation)
+            self.mapView.selectAnnotation(annotation, animated: true)
+        }
+        
+    }
+    
+    private func setupCurrentLocationRegion(location: Array<Double>) {
+        let region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: location[1], longitude: location[0]), span: MKCoordinateSpan(latitudeDelta: 0.4, longitudeDelta: 0.4))
+        mapView.setRegion(region, animated: true)
+    }
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+          
+           var pollutionAnnotationView = mapView.dequeueReusableAnnotationView(withIdentifier: "PollutionFlag") as? MKMarkerAnnotationView
+           
+           if pollutionAnnotationView == nil {
+          
+                pollutionAnnotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: "PollutionFlag")
+               pollutionAnnotationView?.glyphTintColor = UIColor.white
+               pollutionAnnotationView?.canShowCallout = false
+               pollutionAnnotationView?.animatesWhenAdded = true
+               
+            
+           } else {
+               pollutionAnnotationView?.annotation = annotation
+           }
+        
+            if let annotation = annotation as? PollutionAnnotation {
+               if let airQuality = annotation.pollutionIndex  {
+                   pollutionAnnotationView?.glyphText = "\(airQuality)"
+               }
+               if let airColor = annotation.airQuality["color"] as? UIColor {
+                    pollutionAnnotationView?.markerTintColor = airColor
+               }
+           }
+           
+           return pollutionAnnotationView
+           
+    }
+    
+    
+}
+
+
+
+extension HomeViewController {
+
+    func getClosestCityData() {
+        locationManager.requestWhenInUseAuthorization()
+        if (UserPermissions.shared.userLocationUsagePreference) {
+            initiateServerCallBasedOnUserLocation()
+        }
+    }
+    
+    func initiateServerCallBasedOnUserLocation() {
+       if !isShowingUserLocation {
+           cityVM.getCityData { city in
+              if let city = city {
+                  self.cityVM = CityViewModel(city: city)
+                  self.setupUI()
+                  self.selectedCity = nil
+                  self.isShowingUserLocation = true
+                  self.cityVM.saveCityData(city)
+              } else {
+                  self.handleServerError("Server Error", "Please try again later.", "OK")
+               }
+           }
+       } else {
+           if let currentLocation = cityVM.city?.location?.coordinates {
+                setupCurrentLocationRegion(location: currentLocation)
+           }
+       }
+    }
+    
+
+    func handleServerError(_ title : String, _ message: String, _ buttonMessage: String) {
+        UIAlertController.showCustomAlert(title: title, message: message, buttonMessage: buttonMessage, vc: self)
+    }
+    
+}
+
+
+
+
+extension HomeViewController {
+    
+   @IBAction func resetToUserLocation() {
+        showWarningDueToLackOfUserLocationPermission()
+        getClosestCityData()
+   }
+       
+   @IBAction func refreshServerData() {
+       isShowingUserLocation = false
+       if let selectedCity = selectedCity {
+           self.cityVM = CityViewModel(city: selectedCity)
+           self.setupUI()
+       } else {
+           showWarningDueToLackOfUserLocationPermission()
+           getClosestCityData()
+       }
+   }
+    
+   
+    func showWarningDueToLackOfUserLocationPermission() {
+      if(!UserPermissions.shared.userLocationUsagePreference) {
+           handleServerError("Location Request Denied", UserPermissions.shared.defaultErrorMessage, "OK")
+      }
+    }
+    
+    
+}
