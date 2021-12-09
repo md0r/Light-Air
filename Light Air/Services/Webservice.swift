@@ -19,15 +19,18 @@ class Webservice {
     func getResource<T>(resource: Resource<T>, completion: @escaping (T?) -> Void) {
         
         URLSession.shared.dataTask(with: resource.url) { data, response, error in
+      
             guard let data = data, error == nil else {
                 DispatchQueue.main.async {
                     completion(nil)
+                    
                 }
                 return
             }
             
             DispatchQueue.main.async {
                completion(resource.parse(data))
+                
             }
             
         }.resume()
