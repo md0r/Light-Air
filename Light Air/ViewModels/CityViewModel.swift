@@ -58,6 +58,7 @@ struct CityViewModel {
          CoreDataManager.shared.savePollutionData(city)
       }
 
+    
     func getCityData(completion: @escaping (City?) -> Void) {
         
          guard let url = APICalls.shared.getNearestCityDataByIP else {
