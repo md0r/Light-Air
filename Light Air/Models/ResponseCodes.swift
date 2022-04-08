@@ -10,6 +10,7 @@ import Foundation
 
 enum ResponseCodes: String, CaseIterable, Decodable {
    
+    
     case success = "success"
     case fail = "fail"
     case call_limit_reached = "call_limit_reached"

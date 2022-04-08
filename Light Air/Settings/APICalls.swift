@@ -14,7 +14,7 @@ class APICalls {
     static let shared =  APICalls()
     private init() {}
     
-    let APIKey: String =  "7856fbe2-2104-49c1-a500-9d65ad607442"
+    let APIKey: String =  "7325997c-f09a-4e41-b16f-65778b670a3c"
    
     var getAllCountriesURL: URL? {
         return "https://api.airvisual.com/v2/countries?key=\(self.APIKey)".getCleanedURL()
