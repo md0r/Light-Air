@@ -15,25 +15,12 @@ struct Resource<T> {
 
 struct Webservice {
     
-    func getResource<T>(resource: Resource<T>, completion: @escaping (T?) -> Void) {
-        
-        URLSession.shared.dataTask(with: resource.url) { data, response, error in
-      
-            guard let data = data, error == nil else {
-                DispatchQueue.main.async {
-                    completion(nil)
-                    
-                }
-                return
-            }
-            
-            DispatchQueue.main.async {
-               completion(resource.parse(data))
-                
-            }
-            
-        }.resume()
-        
+    func getResource<T>(resource: Resource<T>) async throws -> T? {
+          let (data, _) = try await URLSession.shared.data(from: resource.url)
+          guard let parsedResource = resource.parse(data) else {
+              throw URLError(.badServerResponse)
+          }
+          return parsedResource
     }
     
 }

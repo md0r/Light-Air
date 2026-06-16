@@ -25,7 +25,9 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         ThemeManager.addHeaderImageToNavigationController(sender: self, width: 30, height: 30)
         tableView.delegate = self
         tableView.dataSource = self
-        getCountries()
+        Task {
+            await getCountries()
+        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -75,16 +77,22 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         if let country = searchItem?.item as? Country {
            localCachedCountryParameter = country.name
-           getStates()
+            Task {
+                await getStates()
+            }
         }
         
         if let state = searchItem?.item as? State {
            localCachedStateParameter = state.name
-           getCities()
+            Task {
+                await getCities()
+            }
         }
         
         if let city = searchItem?.item as? City {
-           getCityDetails(city.name)
+            Task {
+                await getCityDetails(city.name)
+            }
         }
     
     }
@@ -94,63 +102,64 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
 extension SearchViewController {
     
-    func getCountries() {
+    func getCountries() async {
        hideTableView()
-       searchVM.getCountriesList { items in
-           if let items = items as? [Country] {
-                self.showTableView("SELECT COUNTRY:", items)
-           } else {
-                self.handleServerError()
-           }
-       }
-    }
-    
-    func getStates() {
-        hideTableView()
-        searchVM.getStatesList(localCachedCountryParameter) { items in
-            if let items = items as? [State] {
-                self.showTableView("SELECT STATE/REGION:", items)
-            } else {
-                self.handleServerError()
-            }
+       let countries = await searchVM.getCountriesList()
+        if let items = countries {
+             self.showTableView("SELECT COUNTRY:", items)
+        } else {
+             self.handleServerError()
         }
     }
     
-    func getCities() {
+    func getStates() async {
         hideTableView()
-        searchVM.getCitiesList(localCachedCountryParameter, localCachedStateParameter) { items in
-           if let items = items as? [City] {
-              self.showTableView("SELECT CITY/AREA:", items)
-           } else {
-              self.handleServerError()
-           }
+        let states = await searchVM.getStatesList(localCachedCountryParameter)
+        if let items = states {
+            self.showTableView("SELECT STATE/REGION:", items)
+        } else {
+            self.handleServerError()
         }
     }
     
-    func getCityDetails(_ cityName: String) {
+    func getCities() async {
         hideTableView()
-        searchVM.getCityFullDetails(localCachedCountryParameter, localCachedStateParameter, cityName) { city in
-           if let city = city as? City {
-               self.navigateToHomeViewController(city)
-               self.searchVM.saveCityData(city)
-           } else {
-               self.handleServerError()
-           }
+        let cities =  await searchVM.getCitiesList(localCachedCountryParameter, localCachedStateParameter)
+        if let items = cities {
+           self.showTableView("SELECT CITY/AREA:", items)
+        } else {
+           self.handleServerError()
+        }
+    }
+    
+    func getCityDetails(_ cityName: String) async {
+        hideTableView()
+        let city = await searchVM.getCityFullDetails(localCachedCountryParameter, localCachedStateParameter, cityName)
+        if let city = city {
+            self.navigateToHomeViewController(city)
+            self.searchVM.saveCityData(city)
+        } else {
+            self.handleServerError()
         }
     }
     
     @IBAction func resetFilters() {
-        getCountries()
+        Task {
+            await getCountries()
+        }
     }
     
     @IBAction func goBackToPreviousFilterLevel() {
         let currentItemInList = searchVM.returnTypeOfItemBeingFiltered
         if currentItemInList is City {
-           getStates()
+            Task {
+                await  getStates()
+            }
         }
-        
         if currentItemInList is State {
-           getCountries()
+            Task {
+                await getCountries()
+            }
         }
     }
     

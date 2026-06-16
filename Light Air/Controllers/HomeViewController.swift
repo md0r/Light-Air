@@ -40,7 +40,9 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate, MKMapView
         self.navigationController?.navigationBar.prefersLargeTitles = true
         ThemeManager.addHeaderImageToNavigationController(sender: self, width: 40, height: 40)
         
-        getClosestCityData()
+        Task {
+            await getClosestCityData()
+        }
         
     }
     
@@ -60,9 +62,13 @@ extension HomeViewController {
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if(status == CLAuthorizationStatus.authorizedWhenInUse || status == CLAuthorizationStatus.authorizedAlways) {
             UserPermissions.shared.userLocationUsagePreference = true
-            getClosestCityData()
+            Task {
+                await getClosestCityData()
+            }
         } else if (status == CLAuthorizationStatus.notDetermined) {
-            getClosestCityData()
+            Task {
+                await getClosestCityData()
+            }
         } else {
             UserPermissions.shared.userLocationUsagePreference = false
             cityVM.handleServerError(StringsUtils.locationRequestDeniedString, StringsUtils.locationAuthMessageString, StringsUtils.OKString, self)
@@ -148,25 +154,23 @@ extension HomeViewController {
 
 extension HomeViewController {
 
-    func getClosestCityData() {
+    func getClosestCityData() async {
         locationManager.requestWhenInUseAuthorization()
         if (UserPermissions.shared.userLocationUsagePreference) {
-            initiateServerCallBasedOnUserLocation()
+            await initiateServerCallBasedOnUserLocation()
         }
     }
     
-    func initiateServerCallBasedOnUserLocation() {
+    func initiateServerCallBasedOnUserLocation() async {
        if !isShowingUserLocation {
-           cityVM.getCityData { city in
-              if let city = city {
-                  self.cityVM = CityViewModel(city: city)
-                  self.setupUI()
-                  self.selectedCity = nil
-                  self.isShowingUserLocation = true
-                  self.cityVM.saveCityData(city)
-              } else {
-                  self.cityVM.handleServerError(StringsUtils.limitReachedString, StringsUtils.pleaseTryAgainString, StringsUtils.OKString, self)
-               }
+           if let city = await cityVM.getCityData() {
+               self.cityVM = CityViewModel(city: city)
+               self.setupUI()
+               self.selectedCity = nil
+               self.isShowingUserLocation = true
+               self.cityVM.saveCityData(city)
+           } else {
+               self.cityVM.handleServerError(StringsUtils.limitReachedString, StringsUtils.pleaseTryAgainString, StringsUtils.OKString, self)
            }
        } else {
            if let currentLocation = cityVM.city?.location?.coordinates {
@@ -181,7 +185,9 @@ extension HomeViewController {
     
    @IBAction func resetToUserLocation() {
         showWarningDueToLackOfUserLocationPermission()
-        getClosestCityData()
+        Task {
+           await getClosestCityData()
+        }
    }
        
    @IBAction func refreshServerData() {
@@ -191,7 +197,9 @@ extension HomeViewController {
            self.setupUI()
        } else {
            showWarningDueToLackOfUserLocationPermission()
-           getClosestCityData()
+           Task {
+               await getClosestCityData()
+           }
        }
    }
     

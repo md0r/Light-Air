@@ -41,91 +41,65 @@ struct SearchViewModel<T> {
         return SearchItemViewModel(item: item)
      }
     
-     func getCountriesList(completion: @escaping (Any?) -> Void) {
-         
+     func getCountriesList() async -> [Country]? {
         guard let url = APICalls.getAllCountriesURL else {
-            return
+            return nil
         }
-    
         let resource = Resource<Any>(url: url) { searchResponse in
             guard let searchWrapper = try? JSONDecoder().decode(SearchItems<Country>.self, from: searchResponse) else {
                    return nil
                 }
             return searchWrapper.items
         }
-        
-        getServerData(resource: resource) { data in
-            completion(data)
-        }
+        return await getServerData(resource: resource) as? [Country]
      }
     
-    
-     func getStatesList(_ country: String?, completion: @escaping (Any?) -> Void) {
-        
+     func getStatesList(_ country: String?) async -> [State]? {
         guard let country = country else  {
-            return
+            return nil
         }
         guard let url = APICalls.getAllStatesFromCountryURL(country: country) else {
-            return
+            return nil
         }
-        
         let resource = Resource<Any>(url: url) { searchResponse in
             guard let searchWrapper = try? JSONDecoder().decode(SearchItems<State>.self, from: searchResponse) else {
                    return nil
                 }
             return searchWrapper.items
         }
-        
-        getServerData(resource: resource) { data in
-            completion(data)
-        }
-        
+        return await getServerData(resource: resource) as? [State]
      }
     
-    
-     func getCitiesList(_ country: String?, _ state: String?, completion: @escaping (Any?) -> Void) {
-           
+     func getCitiesList(_ country: String?, _ state: String?) async -> [City]? {
         guard let country = country, let state = state else {
-            return
+            return nil
         }
         guard let url = APICalls.getAllCitiesFromStateURL(state: state, country: country) else {
-            return
+            return nil
         }
-        
         let resource = Resource<Any>(url: url) { searchResponse in
               guard let searchWrapper = try? JSONDecoder().decode(SearchItems<City>.self, from: searchResponse) else {
                      return nil
                   }
               return searchWrapper.items
         }
-                      
-        getServerData(resource: resource) { data in
-            completion(data)
-        }
-        
+        return await getServerData(resource: resource) as? [City]
      }
     
-     func getCityFullDetails(_ country: String?, _ state: String?, _ city: String?, completion: @escaping (Any?) -> Void)
-     {
-        
+     func getCityFullDetails(_ country: String?, _ state: String?, _ city: String?) async -> City? {
         guard let country = country, let state = state, let city = city else {
-            return
+            return nil
         }
         guard let url = APICalls.getCityData(city: city, state: state, country: country) else {
-            return
+            return nil
         }
-        
         let resource = Resource<Any>(url: url) { searchResponse in
              guard let searchWrapper = try? JSONDecoder().decode(CityResponseWrapper.self, from: searchResponse) else {
                     return nil
                  }
              return searchWrapper.city
         }
-        
-        getServerData(resource: resource) { data in
-               completion(data)
-        }
-        
+        return await getServerData(resource: resource) as? City
      }
     
      func handleServerError(_ title : String, _ message: String, _ buttonMessage: String, _ vc: UIViewController) {
@@ -136,14 +110,13 @@ struct SearchViewModel<T> {
 
 extension SearchViewModel {
     
-    func getServerData(resource: Resource<Any>, completion: @escaping (Any?) -> Void) {
-       Webservice().getResource(resource: resource) { items in
-           if let items = items  {
-               completion(items)
-           } else {
-               completion(nil)
-           }
-       }
+    func getServerData(resource: Resource<Any>) async -> Any? {
+        do {
+            return try await Webservice().getResource(resource: resource)
+        }
+        catch {
+            return nil
+        }
     }
        
 }
@@ -151,7 +124,7 @@ extension SearchViewModel {
 struct SearchItemViewModel<T> {
     
     var item: T?
-
+    
     init(item: T) {
         self.item = item
     }

@@ -81,26 +81,22 @@ struct CityViewModel {
          let _ = CoreDataManager.shared.savePollutionData(city)
     }
 
-    func getCityData(completion: @escaping (City?) -> Void) {
-        
+    func getCityData() async -> City? {
          guard let url = APICalls.getNearestCityDataByIP else {
-            return
+            return nil
          }
-        
          let resource = Resource<City>(url: url) { cityServerResponse in
              guard let cityWrapper = try? JSONDecoder().decode(CityResponseWrapper.self, from: cityServerResponse) else {
                  return nil
              }
              return cityWrapper.city
          }
-             
-         Webservice().getResource(resource: resource) { city in
-             if let city = city {
-                 completion(city)
-             } else {
-                 completion(nil)
-            }
-         }
+        do {
+           return try await Webservice().getResource(resource: resource)
+        }
+        catch {
+            return nil
+        }
         
     }
     
