@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import Combine
 
-class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
@@ -20,16 +21,42 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     private var headingTitle: String  = String()
     private var brandGreenColor: UIColor = UIColor(displayP3Red: 79/255, green: 206/255, blue: 93/255, alpha: 1.0)
     
+    private var cancellables = Set<AnyCancellable>()
+    @Published private var searchQuery: String = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         ThemeManager.addHeaderImageToNavigationController(sender: self, width: 30, height: 30)
         tableView.delegate = self
         tableView.dataSource = self
+        searchBar.delegate = self
+        setupSearchSubscription()
+        
         Task {
             await getCountries()
         }
     }
     
+    private func setupSearchSubscription() {
+       $searchQuery
+           .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
+           .removeDuplicates()
+           .sink { [weak self] query in
+               guard let self = self else { return }
+               self.searchVM.filterItems(query: query)
+               self.tableView.reloadData()
+           }
+           .store(in: &cancellables)
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+       searchQuery = searchText
+    }
+   
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+       searchBar.resignFirstResponder()
+    }
+   
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         tableView.isHidden = (searchVM.searchResultsLength > 0) ? false : true
         return searchVM.searchResultsLength
@@ -107,6 +134,7 @@ extension SearchViewController {
        let countries = await searchVM.getCountriesList()
         if let items = countries {
              self.showTableView("SELECT COUNTRY:", items)
+             searchBar.placeholder = "Search country..."
         } else {
              self.handleServerError()
         }
@@ -117,6 +145,7 @@ extension SearchViewController {
         let states = await searchVM.getStatesList(localCachedCountryParameter)
         if let items = states {
             self.showTableView("SELECT STATE/REGION:", items)
+            searchBar.placeholder = "Search state..."
         } else {
             self.handleServerError()
         }
@@ -127,6 +156,7 @@ extension SearchViewController {
         let cities =  await searchVM.getCitiesList(localCachedCountryParameter, localCachedStateParameter)
         if let items = cities {
            self.showTableView("SELECT CITY/AREA:", items)
+            searchBar.placeholder = "Search city..."
         } else {
            self.handleServerError()
         }
@@ -164,6 +194,8 @@ extension SearchViewController {
     }
     
     func showTableView(_ tableHeaderLabel: String, _ items: [Any]) {
+        searchBar.text = ""
+        searchQuery = ""
         searchVM = SearchViewModel(items: items)
         headingTitle = tableHeaderLabel
         tableView.reloadData()

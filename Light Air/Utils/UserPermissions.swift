@@ -9,12 +9,21 @@
 import Foundation
 import CoreLocation
 
-class UserPermissions: CLLocationManager {
+class UserPermissions: NSObject, CLLocationManagerDelegate {
     
     static let shared = UserPermissions()
-    private override init() { }
+    
+    private let locationManager = CLLocationManager()
     
     let defaultUserPreference: Bool = false
+    
+    private(set) var currentUserPermissionStatus: Bool?
+    
+    private override init() {
+        super.init()
+        locationManager.delegate = self
+        updatePermissionStatus(locationManager.authorizationStatus)
+    }
     
     var userLocationUsagePreference: Bool {
         get {
@@ -23,28 +32,24 @@ class UserPermissions: CLLocationManager {
                 return value
             }
             return defaultUserPreference
-            
         } set {
             let userDefaults = UserDefaults.standard
             userDefaults.set(newValue, forKey: "locationAuth")
         }
     }
     
-    
-    var currentUserPermissionStatus: Bool? {
-        if CLLocationManager.locationServicesEnabled() {
-             switch CLLocationManager.authorizationStatus() {
-                 case .notDetermined, .restricted, .denied:
-                     return false
-                 case .authorizedAlways, .authorizedWhenInUse:
-                     return true
-                 @unknown default:
-                 break
-             }
-             } else {
-                 return nil
-         }
-         return nil
+    private func updatePermissionStatus(_ status: CLAuthorizationStatus) {
+        switch status {
+        case .notDetermined, .restricted, .denied:
+            currentUserPermissionStatus = false
+        case .authorizedAlways, .authorizedWhenInUse:
+            currentUserPermissionStatus = true
+        @unknown default:
+            currentUserPermissionStatus = nil
+        }
     }
-
+    
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        updatePermissionStatus(manager.authorizationStatus)
+    }
 }

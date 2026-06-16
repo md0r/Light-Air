@@ -13,6 +13,7 @@ import UIKit
 struct SearchViewModel<T> {
     
      var items: [T]?
+     private var filteredItems: [T]?
     
      init() {  }
      
@@ -25,20 +26,51 @@ struct SearchViewModel<T> {
      }
     
      var searchResultsLength: Int {
-        return items?.count ?? 0
+         if let filteredItems = filteredItems {
+             return filteredItems.count
+         } else {
+             return items?.count ?? 0
+         }
      }
     
      var titleHeaderHeight: CGFloat {
         return 40
      }
     
-    func saveCityData(_ city: City) {
+     mutating func filterItems(query: String) {
+        guard !query.isEmpty else {
+            filteredItems = items
+            return
+        }
+        filteredItems = items?.filter { searchItem in
+             let lowercasedQuery = query.lowercased()
+             if let country = searchItem as? Country {
+                 return country.name.lowercased().hasPrefix(lowercasedQuery)
+             }
+             if let state = searchItem as? State {
+                 return state.name.lowercased().hasPrefix(lowercasedQuery)
+             }
+             if let city = searchItem as? City {
+                 return city.name.lowercased().hasPrefix(lowercasedQuery)
+             }
+             return false
+        }
+     }
+    
+     func saveCityData(_ city: City) {
         let _ = CoreDataManager.shared.savePollutionData(city)
      }
 
      func getSearchItems(index: Int) -> SearchItemViewModel<T>? {
-        guard let item = items?[index] else { return nil }
-        return SearchItemViewModel(item: item)
+         if let filteredItems = filteredItems {
+             guard index >= 0 && index < filteredItems.count else { return nil }
+             print(index)
+             print(filteredItems)
+             return SearchItemViewModel(item: filteredItems[index])
+         } else {
+             guard let item = items?[index] else { return nil }
+             return SearchItemViewModel(item: item)
+         }
      }
     
      func getCountriesList() async -> [Country]? {
