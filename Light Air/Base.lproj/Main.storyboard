@@ -85,7 +85,6 @@
                     </navigationItem>
                     <connections>
                         <outlet property="activityIndicator" destination="qqK-Ag-GAc" id="LY3-qe-YvL"/>
-                        <outlet property="goBackToPreviousFilterButton" destination="zD3-3H-pMX" id="Sgn-h5-07b"/>
                         <outlet property="searchBar" destination="WPE-VG-Zhy" id="0ax-Z7-rna"/>
                         <outlet property="tableView" destination="NWY-ij-gbT" id="vTC-Ab-VIA"/>
                     </connections>
@@ -174,7 +173,6 @@
                     </navigationItem>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="clearHistoryButton" destination="yXl-nq-WVP" id="1AO-7b-lYf"/>
                         <outlet property="defaultMessageLabel" destination="PnY-lg-zZI" id="wBR-e6-VkV"/>
                         <outlet property="tableView" destination="DMI-Uk-doo" id="icr-lT-wme"/>
                     </connections>

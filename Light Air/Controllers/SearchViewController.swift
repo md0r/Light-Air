@@ -12,7 +12,6 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    @IBOutlet weak var goBackToPreviousFilterButton: UIBarButtonItem!
     @IBOutlet weak var searchBar: UISearchBar!
     
     private var searchVM = SearchViewModel<Any>()

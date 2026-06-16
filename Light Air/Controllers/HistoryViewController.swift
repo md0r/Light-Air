@@ -13,7 +13,6 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
     private var historyVM = HistoryItemsViewModel()
  
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var clearHistoryButton: UIBarButtonItem!
     @IBOutlet weak var defaultMessageLabel: UILabel!
     
     override func viewDidLoad() {
