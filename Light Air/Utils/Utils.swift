@@ -20,7 +20,7 @@ struct StringsUtils {
 
 struct APICalls {
     
-    static let APIKey: String =  "e2bb96ab-b4c4-4a37-9301-fc2895d1fee3"
+    static let APIKey: String =  ""
    
     static var getAllCountriesURL: URL? {
         return "https://api.airvisual.com/v2/countries?key=\(self.APIKey)".getCleanedURL()
