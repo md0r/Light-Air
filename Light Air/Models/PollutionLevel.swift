@@ -7,7 +7,7 @@
 //
 import Foundation
 
-enum PollutionLevels {
+enum PollutionLevel {
   
     case excellent
     case good

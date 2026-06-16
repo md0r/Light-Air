@@ -55,8 +55,6 @@ class HomeViewController: UIViewController, CLLocationManagerDelegate, MKMapView
 
 }
 
-
-
 extension HomeViewController {
 
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
@@ -67,7 +65,7 @@ extension HomeViewController {
             getClosestCityData()
         } else {
             UserPermissions.shared.userLocationUsagePreference = false
-            handleServerError("Location Request Denied", UserPermissions.shared.defaultErrorMessage, "OK")
+            cityVM.handleServerError(StringsUtils.locationRequestDeniedString, StringsUtils.locationAuthMessageString, StringsUtils.OKString, self)
         }
     }
     
@@ -77,16 +75,10 @@ extension HomeViewController {
         self.cityTemperatureLabel.text = cityVM.temperature
         
         if let pollutionIndex = cityVM.pollutionLevel {
-            
-            guard let airQuality = cityVM.pollutionDetails["quality"] as? String,
-                  let airQualityBg = cityVM.pollutionDetails["color"] as? UIColor,
-                  let airQualityFontColor = cityVM.pollutionDetails["fontColor"] as? UIColor else { return }
-         
-            airQualityView.backgroundColor = airQualityBg
-            airQualityLabel.text = "Air Quality: \(airQuality) // US AQI \(pollutionIndex)"
-            airQualityLabel.textColor = airQualityFontColor
+            airQualityView.backgroundColor = cityVM.airQualityBg
+            airQualityLabel.text = "\(cityVM.airQuality) // US AQI \(pollutionIndex)"
+            airQualityLabel.textColor = cityVM.airQualityFontColor
             airQualityView.alpha = 1
-            
         }
         
         if let iconName = cityVM.iconCode {
@@ -103,7 +95,6 @@ extension HomeViewController {
     
 }
 
-
 extension HomeViewController {
     
     private func zoomInToDesiredLocation(location: Array<Double>) {
@@ -114,10 +105,7 @@ extension HomeViewController {
         if let pollutionIndex = cityVM.pollutionLevel {
             let annotation = PollutionAnnotation(pollution: pollutionIndex)
             annotation.coordinate = CLLocationCoordinate2D(latitude: location[1], longitude: location[0])
-            if let airQuality = annotation.airQuality["quality"] as? String {
-                annotation.title = airQuality
-            }
-           
+            annotation.title = annotation.airQuality
             self.mapView.addAnnotation(annotation)
             self.mapView.selectAnnotation(annotation, animated: true)
         }
@@ -149,19 +137,14 @@ extension HomeViewController {
                if let airQuality = annotation.pollutionIndex  {
                    pollutionAnnotationView?.glyphText = "\(airQuality)"
                }
-               if let airColor = annotation.airQuality["color"] as? UIColor {
-                    pollutionAnnotationView?.markerTintColor = airColor
-               }
+               pollutionAnnotationView?.markerTintColor = annotation.airQualityColorLabel
            }
            
            return pollutionAnnotationView
            
     }
     
-    
 }
-
-
 
 extension HomeViewController {
 
@@ -182,7 +165,7 @@ extension HomeViewController {
                   self.isShowingUserLocation = true
                   self.cityVM.saveCityData(city)
               } else {
-                  self.handleServerError("Server Error", "Please try again later.", "OK")
+                  self.cityVM.handleServerError(StringsUtils.limitReachedString, StringsUtils.pleaseTryAgainString, StringsUtils.OKString, self)
                }
            }
        } else {
@@ -191,16 +174,8 @@ extension HomeViewController {
            }
        }
     }
-    
 
-    func handleServerError(_ title : String, _ message: String, _ buttonMessage: String) {
-        UIAlertController.showCustomAlert(title: title, message: message, buttonMessage: buttonMessage, vc: self)
-    }
-    
 }
-
-
-
 
 extension HomeViewController {
     
@@ -220,12 +195,10 @@ extension HomeViewController {
        }
    }
     
-   
-    func showWarningDueToLackOfUserLocationPermission() {
+   func showWarningDueToLackOfUserLocationPermission() {
       if(!UserPermissions.shared.userLocationUsagePreference) {
-           handleServerError("Location Request Denied", UserPermissions.shared.defaultErrorMessage, "OK")
+          cityVM.handleServerError(StringsUtils.locationRequestDeniedString, StringsUtils.locationAuthMessageString, StringsUtils.OKString, self)
       }
-    }
-    
+   }
     
 }

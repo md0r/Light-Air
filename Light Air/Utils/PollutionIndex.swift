@@ -9,38 +9,32 @@
 import Foundation
 import UIKit
 
-class PollutionIndex {
+struct PollutionIndex {
+        
+    static let greenColor:UIColor = UIColor(displayP3Red: 169/255, green: 222/255, blue: 103/255, alpha: 1.0)
+    static let redColor:UIColor = UIColor(displayP3Red: 252/255, green: 107/255, blue: 108/255, alpha: 1.0)
+    static let yellowColor:UIColor = UIColor(displayP3Red: 252/255, green: 214/255, blue: 88/255, alpha: 1.0)
+    static let purpleColor:UIColor = UIColor(displayP3Red: 168/255, green: 124/255, blue: 186/255, alpha: 1.0)
+    static let whiteColor:UIColor = UIColor.white
+    static let brandDarkGreen: UIColor = UIColor(displayP3Red: 30/255, green: 121/255, blue: 40/255, alpha: 1.0)
+    static let brandGreen: UIColor = UIColor(displayP3Red: 79/255, green: 206/255, blue: 93/255, alpha: 1.0)
     
-    static let shared =  PollutionIndex()
-    private init() {}
-    
-    let greenColor:UIColor = UIColor(displayP3Red: 169/255, green: 222/255, blue: 103/255, alpha: 1.0)
-    let redColor:UIColor = UIColor(displayP3Red: 252/255, green: 107/255, blue: 108/255, alpha: 1.0)
-    let yellowColor:UIColor = UIColor(displayP3Red: 252/255, green: 214/255, blue: 88/255, alpha: 1.0)
-    let purpleColor:UIColor = UIColor(displayP3Red: 168/255, green: 124/255, blue: 186/255, alpha: 1.0)
-    
-    let whiteColor:UIColor = UIColor.white
-    let brandDarkGreen: UIColor = UIColor(displayP3Red: 30/255, green: 121/255, blue: 40/255, alpha: 1.0)
-    let brandGreen: UIColor = UIColor(displayP3Red: 79/255, green: 206/255, blue: 93/255, alpha: 1.0)
-    
-    func getAirQualityLevel(_ pollutionIndex: Int?) -> [String:Any] {
+    static func getAirQualityLevel(_ pollutionIndex: Int?) -> [String:Any] {
         
         if let index = pollutionIndex {
             if(index < 20) {
-                return ["quality" : "Excellent", "color" : greenColor, "fontColor" : brandDarkGreen]
+                return ["quality" : PollutionLevel.excellent.description, "color" : greenColor, "fontColor" : brandDarkGreen]
             } else if (index >= 20 && index < 50) {
-                return ["quality" : "Good", "color" : greenColor, "fontColor" : brandDarkGreen]
+                return ["quality" : PollutionLevel.good.description, "color" : greenColor, "fontColor" : brandDarkGreen]
             } else if (index >= 50 && index < 100) {
-                return ["quality" : "Moderate", "color" : yellowColor, "fontColor" : brandDarkGreen]
+                return ["quality" : PollutionLevel.moderate.description, "color" : yellowColor, "fontColor" : brandDarkGreen]
             } else if (index >= 100 && index < 200) {
-                return ["quality" : "Unhealthy", "color" : redColor, "fontColor" : whiteColor]
+                return ["quality" : PollutionLevel.unhealthy.description, "color" : redColor, "fontColor" : whiteColor]
             } else {
-                return ["quality" : "Very Unhealthy", "color" : purpleColor, "fontColor" : whiteColor]
+                return ["quality" : PollutionLevel.veryUnhealthy.description, "color" : purpleColor, "fontColor" : whiteColor]
             }
         } else {
-               return ["quality" : "N/A", "color" : yellowColor, "fontColor" : whiteColor]
+               return ["quality" : PollutionLevel.notAvailable.description, "color" : yellowColor, "fontColor" : whiteColor]
         }
-        
     }
-    
 }

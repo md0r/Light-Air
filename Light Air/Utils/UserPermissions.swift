@@ -15,7 +15,6 @@ class UserPermissions: CLLocationManager {
     private override init() { }
     
     let defaultUserPreference: Bool = false
-    let defaultErrorMessage: String = "Please authorize the app from your phone settings to use your location to get real time data about the quality of the air from your area."
     
     var userLocationUsagePreference: Bool {
         get {
@@ -47,7 +46,5 @@ class UserPermissions: CLLocationManager {
          }
          return nil
     }
-    
-    
-    
+
 }

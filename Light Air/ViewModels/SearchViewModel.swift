@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+@MainActor
 struct SearchViewModel<T> {
     
      var items: [T]?
@@ -32,7 +33,7 @@ struct SearchViewModel<T> {
      }
     
     func saveCityData(_ city: City) {
-        CoreDataManager.shared.savePollutionData(city)
+        let _ = CoreDataManager.shared.savePollutionData(city)
      }
 
      func getSearchItems(index: Int) -> SearchItemViewModel<T>? {
@@ -42,7 +43,7 @@ struct SearchViewModel<T> {
     
      func getCountriesList(completion: @escaping (Any?) -> Void) {
          
-        guard let url = APICalls.shared.getAllCountriesURL else {
+        guard let url = APICalls.getAllCountriesURL else {
             return
         }
     
@@ -64,7 +65,7 @@ struct SearchViewModel<T> {
         guard let country = country else  {
             return
         }
-        guard let url = APICalls.shared.getAllStatesFromCountryURL(country: country) else {
+        guard let url = APICalls.getAllStatesFromCountryURL(country: country) else {
             return
         }
         
@@ -87,7 +88,7 @@ struct SearchViewModel<T> {
         guard let country = country, let state = state else {
             return
         }
-        guard let url = APICalls.shared.getAllCitiesFromStateURL(state: state, country: country) else {
+        guard let url = APICalls.getAllCitiesFromStateURL(state: state, country: country) else {
             return
         }
         
@@ -104,15 +105,13 @@ struct SearchViewModel<T> {
         
      }
     
-    
-    
      func getCityFullDetails(_ country: String?, _ state: String?, _ city: String?, completion: @escaping (Any?) -> Void)
      {
         
         guard let country = country, let state = state, let city = city else {
             return
         }
-        guard let url = APICalls.shared.getCityData(city: city, state: state, country: country) else {
+        guard let url = APICalls.getCityData(city: city, state: state, country: country) else {
             return
         }
         
@@ -129,10 +128,11 @@ struct SearchViewModel<T> {
         
      }
     
+     func handleServerError(_ title : String, _ message: String, _ buttonMessage: String, _ vc: UIViewController) {
+        UIAlertController.showCustomAlert(title: title, message: message, buttonMessage: buttonMessage, vc: vc)
+     }
+    
 }
-
-
-
 
 extension SearchViewModel {
     
@@ -148,13 +148,10 @@ extension SearchViewModel {
        
 }
 
-
-
-
 struct SearchItemViewModel<T> {
     
     var item: T?
-    
+
     init(item: T) {
         self.item = item
     }

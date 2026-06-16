@@ -38,7 +38,7 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        clearHistoryButton.tintColor = (historyVM.historyItems.count > 0) ? UIColor.white : PollutionIndex.shared.brandGreen
+        clearHistoryButton.tintColor = (historyVM.historyItems.count > 0) ? UIColor.white : PollutionIndex.brandGreen
         defaultMessageLabel.isHidden = (historyVM.historyItems.count > 0) ? true : false
         tableView.isHidden = (historyVM.historyItems.count > 0) ? false : true
         return historyVM.historyItems.count
@@ -51,13 +51,13 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
         }
         
         let historyItem = historyVM.historyItems[indexPath.row]
-        let pollutionDetails = historyItem.pollutionDetailsData
         
         guard let country = historyItem.country,
               let city = historyItem.name,
-              let airQuality = pollutionDetails["quality"] as? String,
-              let airQualityBg = pollutionDetails["color"] as? UIColor,
-              let airQualityFontColor = pollutionDetails["fontColor"] as? UIColor else {
+              let airQuality = historyItem.airQuality,
+              let airQualityBg = historyItem.airQualityBgColor,
+              let airQualityFontColor = historyItem.airQualityFontColor
+        else {
               return UITableViewCell()
         }
     
@@ -73,7 +73,7 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func getRecords() {
         historyVM.fetchAllHistoryData()
-        clearHistoryButton.tintColor = PollutionIndex.shared.brandGreen
+        clearHistoryButton.tintColor = PollutionIndex.brandGreen
         tableView.reloadData()
     }
     

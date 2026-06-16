@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 struct CityResponseWrapper: Decodable {
     
     let status: ResponseCodes.RawValue
@@ -59,7 +58,6 @@ struct City: Decodable {
     
 }
 
-
 struct CityLocation: Decodable {
     let type: String
     let coordinates: [Double]
@@ -69,7 +67,6 @@ struct CityCurrentData: Decodable {
     let weather: CityWeatherData
     let pollution: CityPollutionData
 }
-
 
 struct CityWeatherData: Decodable {
     

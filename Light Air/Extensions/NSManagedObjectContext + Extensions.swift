@@ -10,6 +10,7 @@ import Foundation
 import CoreData
 import UIKit
 
+@MainActor
 extension NSManagedObjectContext {
     
     static var getCurrentViewContext: NSManagedObjectContext {

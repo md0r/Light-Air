@@ -13,6 +13,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var goBackToPreviousFilterButton: UIBarButtonItem!
+    @IBOutlet weak var searchBar: UISearchBar!
     
     private var searchVM = SearchViewModel<Any>()
     private var localCachedCountryParameter:String = String()
@@ -100,7 +101,6 @@ extension SearchViewController {
        searchVM.getCountriesList { items in
            if let items = items as? [Country] {
                 self.showTableView("SELECT COUNTRY:", items)
-                self.goBackToPreviousFilterButton.tintColor = self.brandGreenColor
            } else {
                 self.handleServerError()
            }
@@ -112,7 +112,6 @@ extension SearchViewController {
         searchVM.getStatesList(localCachedCountryParameter) { items in
             if let items = items as? [State] {
                 self.showTableView("SELECT STATE/REGION:", items)
-                self.goBackToPreviousFilterButton.tintColor = UIColor.white
             } else {
                 self.handleServerError()
             }
@@ -187,7 +186,7 @@ extension SearchViewController {
     func handleServerError() {
         tableView.alpha = 1
         activityIndicator.isHidden = true
-        UIAlertController.showCustomAlert(title: "Server Error", message: "Please try again later.", buttonMessage: "OK", vc: self)
+        searchVM.handleServerError(StringsUtils.limitReachedString, StringsUtils.pleaseTryAgainString, StringsUtils.OKString, self)
     }
     
 }

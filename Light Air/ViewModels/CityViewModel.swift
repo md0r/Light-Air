@@ -6,8 +6,10 @@
 //  Copyright © 2020 Mihai Dorhan. All rights reserved.
 //
 
+import UIKit
 import Foundation
 
+@MainActor
 struct CityViewModel {
     
     var city: City?
@@ -51,17 +53,37 @@ struct CityViewModel {
     }
     
     var pollutionDetails: [String: Any] {
-        PollutionIndex.shared.getAirQualityLevel(city?.currentData?.pollution.aqius)
+        PollutionIndex.getAirQualityLevel(city?.currentData?.pollution.aqius)
+    }
+    
+    var airQuality: String {
+        if let airQuality = pollutionDetails["quality"] as? String {
+            return "Air Quality: \(airQuality)"
+        }
+        return "Air Quality: Unknown"
+    }
+    
+    var airQualityBg: UIColor {
+        if let airQualityBg = pollutionDetails["color"] as? UIColor {
+            return airQualityBg
+        }
+        return .systemRed
+    }
+    
+    var airQualityFontColor: UIColor {
+        if let airQualityFontColor = pollutionDetails["fontColor"] as? UIColor {
+            return airQualityFontColor
+        }
+        return .white
     }
     
     func saveCityData(_ city: City) {
-         CoreDataManager.shared.savePollutionData(city)
-      }
+         let _ = CoreDataManager.shared.savePollutionData(city)
+    }
 
-    
     func getCityData(completion: @escaping (City?) -> Void) {
         
-         guard let url = APICalls.shared.getNearestCityDataByIP else {
+         guard let url = APICalls.getNearestCityDataByIP else {
             return
          }
         
@@ -82,5 +104,8 @@ struct CityViewModel {
         
     }
     
+    func handleServerError(_ title : String, _ message: String, _ buttonMessage: String, _ vc: UIViewController) {
+        UIAlertController.showCustomAlert(title: title, message: message, buttonMessage: buttonMessage, vc: vc)
+    }
     
 }

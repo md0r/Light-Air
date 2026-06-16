@@ -7,7 +7,9 @@
 //
 
 import Foundation
+import UIKit
 
+@MainActor
 struct HistoryItemsViewModel {
     
     var historyItems = [HistoryItemVM]()
@@ -18,7 +20,7 @@ struct HistoryItemsViewModel {
     }
     
     func deleteAllHistoryData() {
-        CoreDataManager.shared.deleteAllPollutionData()
+        let _ = CoreDataManager.shared.deleteAllPollutionData()
     }
     
 }
@@ -48,7 +50,19 @@ struct HistoryItemVM {
     }
     
     var pollutionDetailsData: [String:Any] {
-        PollutionIndex.shared.getAirQualityLevel(pollution)
+        PollutionIndex.getAirQualityLevel(pollution)
+    }
+    
+    var airQuality: String? {
+        return pollutionDetailsData["quality"] as? String
+    }
+    
+    var airQualityBgColor: UIColor? {
+        return pollutionDetailsData["color"] as? UIColor
+    }
+    
+    var airQualityFontColor: UIColor? {
+        return pollutionDetailsData["fontColor"] as? UIColor
     }
     
 }

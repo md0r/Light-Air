@@ -17,8 +17,22 @@ class PollutionAnnotation: MKPointAnnotation {
         self.pollutionIndex = pollution
     }
    
-    var airQuality: [String:Any] {
-        PollutionIndex.shared.getAirQualityLevel(pollutionIndex)
+    var airQualityDetails: [String:Any] {
+        PollutionIndex.getAirQualityLevel(pollutionIndex)
+    }
+    
+    var airQuality: String {
+        if let airQuality = airQualityDetails["quality"] as? String {
+            return airQuality
+        }
+        return "Unknown"
+    }
+    
+    var airQualityColorLabel: UIColor {
+        if let airQualityColorLabel = airQualityDetails["color"] as? UIColor {
+            return airQualityColorLabel
+        }
+        return UIColor.red
     }
     
 }

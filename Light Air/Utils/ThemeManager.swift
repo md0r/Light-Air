@@ -9,8 +9,7 @@
 import Foundation
 import UIKit
 
-
-class ThemeManager {
+struct ThemeManager {
     
     static func setup() {
         
@@ -46,6 +45,5 @@ class ThemeManager {
         logoContainer.addSubview(imageView)
         sender.navigationItem.titleView = logoContainer
     }
-    
     
 }

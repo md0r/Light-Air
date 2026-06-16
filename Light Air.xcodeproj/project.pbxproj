@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -16,7 +16,7 @@
 		910B03A623F2E85A00BA2D28 /* NSManagedObjectContext + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 910B03A523F2E85A00BA2D28 /* NSManagedObjectContext + Extensions.swift */; };
 		910B03A823F2E88B00BA2D28 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 910B03A723F2E88B00BA2D28 /* CoreDataManager.swift */; };
 		913651DC23E6AD2D00822AC6 /* Webservice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 913651DB23E6AD2D00822AC6 /* Webservice.swift */; };
-		913651E223E6B0E200822AC6 /* APICalls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 913651E123E6B0E200822AC6 /* APICalls.swift */; };
+		913651E223E6B0E200822AC6 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 913651E123E6B0E200822AC6 /* Utils.swift */; };
 		9141928123F1ABA700C9A1BB /* PollutionIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9141928023F1ABA700C9A1BB /* PollutionIndex.swift */; };
 		914CE28A23F55480007B95AB /* HistoryRecordTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914CE28923F55480007B95AB /* HistoryRecordTableCell.swift */; };
 		9174C54D23ED44EB0091AC15 /* CityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9174C54C23ED44EB0091AC15 /* CityViewModel.swift */; };
@@ -37,6 +37,7 @@
 		91C10C3D23EFF08100E722DA /* UILabel + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91C10C3C23EFF08100E722DA /* UILabel + Extensions.swift */; };
 		91C10C3F23EFFC1F00E722DA /* UIAlertController + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91C10C3E23EFFC1F00E722DA /* UIAlertController + Extensions.swift */; };
 		91C10C4123F001C200E722DA /* UIView + Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91C10C4023F001C200E722DA /* UIView + Extensions.swift */; };
+		AFB3759E2FE13813004BE883 /* PollutionLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB3759D2FE13810004BE883 /* PollutionLevel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,7 +50,7 @@
 		910B03A523F2E85A00BA2D28 /* NSManagedObjectContext + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext + Extensions.swift"; sourceTree = "<group>"; };
 		910B03A723F2E88B00BA2D28 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		913651DB23E6AD2D00822AC6 /* Webservice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Webservice.swift; sourceTree = "<group>"; };
-		913651E123E6B0E200822AC6 /* APICalls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APICalls.swift; sourceTree = "<group>"; };
+		913651E123E6B0E200822AC6 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		9141928023F1ABA700C9A1BB /* PollutionIndex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollutionIndex.swift; sourceTree = "<group>"; };
 		914CE28923F55480007B95AB /* HistoryRecordTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryRecordTableCell.swift; sourceTree = "<group>"; };
 		9174C54C23ED44EB0091AC15 /* CityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityViewModel.swift; sourceTree = "<group>"; };
@@ -72,6 +73,7 @@
 		91C10C3C23EFF08100E722DA /* UILabel + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel + Extensions.swift"; sourceTree = "<group>"; };
 		91C10C3E23EFFC1F00E722DA /* UIAlertController + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIAlertController + Extensions.swift"; sourceTree = "<group>"; };
 		91C10C4023F001C200E722DA /* UIView + Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView + Extensions.swift"; sourceTree = "<group>"; };
+		AFB3759D2FE13810004BE883 /* PollutionLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollutionLevel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +98,7 @@
 		913651DD23E6AD3800822AC6 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				AFB3759D2FE13810004BE883 /* PollutionLevel.swift */,
 				919F66A423E9749B0092893B /* City.swift */,
 				919F66A623E99BB90092893B /* Country.swift */,
 				919F66A823E9A11F0092893B /* State.swift */,
@@ -125,16 +128,16 @@
 			path = Controllers;
 			sourceTree = "<group>";
 		};
-		913651E023E6B0D300822AC6 /* Settings */ = {
+		913651E023E6B0D300822AC6 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				913651E123E6B0E200822AC6 /* APICalls.swift */,
+				913651E123E6B0E200822AC6 /* Utils.swift */,
 				9141928023F1ABA700C9A1BB /* PollutionIndex.swift */,
 				9103D7BC23EAB9530049A07C /* ThemeManager.swift */,
 				910B03A723F2E88B00BA2D28 /* CoreDataManager.swift */,
 				9184D9D023F69E55007BB3C9 /* UserPermissions.swift */,
 			);
-			path = Settings;
+			path = Utils;
 			sourceTree = "<group>";
 		};
 		914CE28823F5545D007B95AB /* UITableViewCells */ = {
@@ -184,10 +187,10 @@
 		91B000EA23E47CAF0080889E /* Light Air */ = {
 			isa = PBXGroup;
 			children = (
-				914CE28823F5545D007B95AB /* UITableViewCells */,
+				AFB3759C2FE0775C004BE883 /* CustomViews */,
 				9181027623EF385F00FBF55E /* Extensions */,
 				9174C54E23ED78360091AC15 /* CustomAnnotations */,
-				913651E023E6B0D300822AC6 /* Settings */,
+				913651E023E6B0D300822AC6 /* Utils */,
 				913651DF23E6AD4300822AC6 /* Controllers */,
 				913651DE23E6AD3D00822AC6 /* ViewModels */,
 				913651DD23E6AD3800822AC6 /* Models */,
@@ -201,6 +204,14 @@
 				91B000F923E47CAF0080889E /* Info.plist */,
 			);
 			path = "Light Air";
+			sourceTree = "<group>";
+		};
+		AFB3759C2FE0775C004BE883 /* CustomViews */ = {
+			isa = PBXGroup;
+			children = (
+				914CE28823F5545D007B95AB /* UITableViewCells */,
+			);
+			path = CustomViews;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -229,8 +240,9 @@
 		91B000E023E47CAF0080889E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1130;
-				LastUpgradeCheck = 1130;
+				LastUpgradeCheck = 2650;
 				ORGANIZATIONNAME = "Mihai Dorhan";
 				TargetAttributes = {
 					91B000E723E47CAF0080889E = {
@@ -290,10 +302,11 @@
 				9184D9D123F69E55007BB3C9 /* UserPermissions.swift in Sources */,
 				9105000123EEA442003D7221 /* SearchViewModel.swift in Sources */,
 				9141928123F1ABA700C9A1BB /* PollutionIndex.swift in Sources */,
+				AFB3759E2FE13813004BE883 /* PollutionLevel.swift in Sources */,
 				91B000EE23E47CAF0080889E /* SceneDelegate.swift in Sources */,
 				9103D7BB23EAB8DC0049A07C /* HistoryViewController.swift in Sources */,
 				919F66AB23E9A2A50092893B /* ResponseCodes.swift in Sources */,
-				913651E223E6B0E200822AC6 /* APICalls.swift in Sources */,
+				913651E223E6B0E200822AC6 /* Utils.swift in Sources */,
 				9174C54D23ED44EB0091AC15 /* CityViewModel.swift in Sources */,
 				91C10C3D23EFF08100E722DA /* UILabel + Extensions.swift in Sources */,
 				919F66A923E9A11F0092893B /* State.swift in Sources */,
@@ -352,6 +365,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -360,8 +374,10 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 8X7UVR2M33;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -381,6 +397,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -412,6 +429,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -420,8 +438,10 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 8X7UVR2M33;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -434,6 +454,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
@@ -445,7 +466,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 8X7UVR2M33;
 				INFOPLIST_FILE = "Light Air/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -465,7 +485,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 8X7UVR2M33;
 				INFOPLIST_FILE = "Light Air/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
