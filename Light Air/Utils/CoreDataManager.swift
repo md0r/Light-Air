@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 
+@MainActor
 class CoreDataManager {
     
     static let shared = CoreDataManager(moc: NSManagedObjectContext.getCurrentViewContext)
