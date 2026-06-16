@@ -23,7 +23,6 @@ class SearchViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        goBackToPreviousFilterButton.tintColor = brandGreenColor
         ThemeManager.addHeaderImageToNavigationController(sender: self, width: 30, height: 30)
         tableView.delegate = self
         tableView.dataSource = self

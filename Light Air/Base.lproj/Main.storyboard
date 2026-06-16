@@ -22,7 +22,7 @@
                                 <color key="color" systemColor="systemGrayColor"/>
                             </activityIndicatorView>
                             <searchBar contentMode="redraw" placeholder="Search country..." translatesAutoresizingMaskIntoConstraints="NO" id="WPE-VG-Zhy">
-                                <rect key="frame" x="20" y="170" width="374" height="50"/>
+                                <rect key="frame" x="10" y="170" width="394" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="x6I-jP-qnM"/>
                                 </constraints>
@@ -32,7 +32,7 @@
                                 </connections>
                             </searchBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="NWY-ij-gbT">
-                                <rect key="frame" x="0.0" y="240" width="414" height="539"/>
+                                <rect key="frame" x="0.0" y="230" width="414" height="549"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="SearchOptionsCellId" textLabel="bGA-Bn-e2a" rowHeight="40" style="IBUITableViewCellStyleDefault" id="MoG-hy-igX">
@@ -60,22 +60,24 @@
                         <constraints>
                             <constraint firstItem="qqK-Ag-GAc" firstAttribute="centerY" secondItem="uvP-Uv-9qt" secondAttribute="centerY" id="DKb-uX-ugm"/>
                             <constraint firstItem="NWY-ij-gbT" firstAttribute="trailing" secondItem="eL1-0x-vYo" secondAttribute="trailing" id="OtX-hI-Jkp"/>
-                            <constraint firstItem="eL1-0x-vYo" firstAttribute="trailing" secondItem="WPE-VG-Zhy" secondAttribute="trailing" constant="20" id="Tfg-8y-awM"/>
-                            <constraint firstItem="NWY-ij-gbT" firstAttribute="top" secondItem="WPE-VG-Zhy" secondAttribute="bottom" constant="20" id="Zcd-Bh-LDH"/>
+                            <constraint firstItem="eL1-0x-vYo" firstAttribute="trailing" secondItem="WPE-VG-Zhy" secondAttribute="trailing" constant="10" id="Tfg-8y-awM"/>
+                            <constraint firstItem="NWY-ij-gbT" firstAttribute="top" secondItem="WPE-VG-Zhy" secondAttribute="bottom" constant="10" id="Zcd-Bh-LDH"/>
                             <constraint firstItem="WPE-VG-Zhy" firstAttribute="top" secondItem="eL1-0x-vYo" secondAttribute="top" constant="20" id="eTy-0s-uwr"/>
                             <constraint firstItem="NWY-ij-gbT" firstAttribute="leading" secondItem="eL1-0x-vYo" secondAttribute="leading" id="mUb-we-hKY"/>
-                            <constraint firstItem="WPE-VG-Zhy" firstAttribute="leading" secondItem="eL1-0x-vYo" secondAttribute="leading" constant="20" id="qkv-hT-e6C"/>
+                            <constraint firstItem="WPE-VG-Zhy" firstAttribute="leading" secondItem="eL1-0x-vYo" secondAttribute="leading" constant="10" id="qkv-hT-e6C"/>
                             <constraint firstItem="NWY-ij-gbT" firstAttribute="bottom" secondItem="eL1-0x-vYo" secondAttribute="bottom" id="sUY-Jh-bx5"/>
                             <constraint firstItem="qqK-Ag-GAc" firstAttribute="centerX" secondItem="uvP-Uv-9qt" secondAttribute="centerX" id="yqV-rd-bxp"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Search" id="r47-fB-zde">
                         <barButtonItem key="leftBarButtonItem" title="Back" id="zD3-3H-pMX">
+                            <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
                                 <action selector="goBackToPreviousFilterLevel" destination="tXp-Kt-fqF" id="x7I-q2-tjI"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Refresh" id="3DN-s5-fQo">
+                            <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
                                 <action selector="resetFilters" destination="tXp-Kt-fqF" id="oGe-J0-wvV"/>
                             </connections>
@@ -164,6 +166,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Search History" id="hDm-3J-Vhh">
                         <barButtonItem key="rightBarButtonItem" title="Clear" id="yXl-nq-WVP">
+                            <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
                                 <action selector="deleteRecords" destination="wHd-9G-Ld4" id="rt5-fd-H4p"/>
                             </connections>
@@ -279,11 +282,13 @@
                     </view>
                     <navigationItem key="navigationItem" title="Loading..." id="tb1-PS-AFz">
                         <barButtonItem key="leftBarButtonItem" title="Reset Location" id="Hgy-ac-UaO">
+                            <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
                                 <action selector="resetToUserLocation" destination="7QA-Vp-5Hg" id="0Z5-d1-w58"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Refresh" id="Rkk-h9-MIe">
+                            <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
                                 <action selector="refreshServerData" destination="7QA-Vp-5Hg" id="srV-v6-LNw"/>
                             </connections>

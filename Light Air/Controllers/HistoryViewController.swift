@@ -38,7 +38,6 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        clearHistoryButton.tintColor = (historyVM.historyItems.count > 0) ? UIColor.white : PollutionIndex.brandGreen
         defaultMessageLabel.isHidden = (historyVM.historyItems.count > 0) ? true : false
         tableView.isHidden = (historyVM.historyItems.count > 0) ? false : true
         return historyVM.historyItems.count
@@ -73,7 +72,6 @@ class HistoryViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func getRecords() {
         historyVM.fetchAllHistoryData()
-        clearHistoryButton.tintColor = PollutionIndex.brandGreen
         tableView.reloadData()
     }
     
